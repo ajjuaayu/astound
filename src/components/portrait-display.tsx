@@ -10,7 +10,7 @@ export default function PortraitDisplay() {
       <CardContent className="p-0">
         <div className="relative aspect-[3/4] w-full">
           <Image
-            src="/aayushi-portrait.jpeg" // Updated image path
+            src="https://raw.githubusercontent.com/ajjuaayu/astound/refs/heads/master/aayushi-portrait.jpeg" // Updated image path
             alt="Aayushi's Portrait"
             layout="fill"
             objectFit="cover"
