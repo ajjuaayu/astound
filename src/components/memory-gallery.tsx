@@ -12,8 +12,8 @@ interface Memory {
 }
 
 const memories: Memory[] = [
-  { id: '1', src: 'https://placehold.co/400x300.png', alt: 'Memory 1', aiHint: 'friends celebration' },
-  { id: '2', src: 'https://placehold.co/400x300.png', alt: 'Memory 2', aiHint: 'happy moment' },
+  { id: '1', src: 'https://raw.githubusercontent.com/ajjuaayu/astound/refs/heads/master/Untitled%20design%20(3).png', alt: 'Memory 1', aiHint: 'friends celebration' },
+  { id: '2', src: 'https://raw.githubusercontent.com/ajjuaayu/astound/refs/heads/master/Untitled%20design%20(3).png', alt: 'Memory 2', aiHint: 'happy moment' },
   { id: '3', src: 'https://placehold.co/400x300.png', alt: 'Memory 3', aiHint: 'group photo' },
   { id: '4', src: 'https://placehold.co/400x300.png', alt: 'Memory 4', aiHint: 'birthday party' },
   { id: '5', src: 'https://placehold.co/400x300.png', alt: 'Memory 5', aiHint: 'travel adventure' },
