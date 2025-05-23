@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useActionState } from 'react';
+import React, { useState, useEffect, useRef, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { handleAnalyzeWishes } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, Tag } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const initialState = {
   result: undefined,
@@ -30,7 +31,11 @@ export default function WishAnalyzer() {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const prevTimestamp = useRef<number | undefined>(undefined);
+  const [hasMounted, setHasMounted] = useState(false);
 
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     if (state.timestamp && state.timestamp !== prevTimestamp.current) {
@@ -61,19 +66,31 @@ export default function WishAnalyzer() {
           Enter birthday wishes (one per line) to see common themes and sentiments.
         </CardDescription>
       </CardHeader>
-      <form action={formAction} ref={formRef}>
-        <CardContent className="space-y-4">
-          <Textarea
-            name="wishes"
-            placeholder="Happy Birthday Aayushi!\nWishing you lots of joy!\nHave a great year ahead!"
-            rows={5}
-            className="focus:ring-accent"
-          />
-        </CardContent>
-        <CardFooter>
-          <SubmitButton />
-        </CardFooter>
-      </form>
+      {hasMounted ? (
+        <form action={formAction} ref={formRef}>
+          <CardContent className="space-y-4">
+            <Textarea
+              name="wishes"
+              placeholder="Happy Birthday Aayushi!\nWishing you lots of joy!\nHave a great year ahead!"
+              rows={5}
+              className="focus:ring-accent"
+              aria-label="Enter birthday wishes"
+            />
+          </CardContent>
+          <CardFooter>
+            <SubmitButton />
+          </CardFooter>
+        </form>
+      ) : (
+        <>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-24 w-full" /> {/* Placeholder for textarea */}
+          </CardContent>
+          <CardFooter>
+            <Skeleton className="h-10 w-40" /> {/* Placeholder for button */}
+          </CardFooter>
+        </>
+      )}
       {state.result && (
         <CardContent className="mt-6 border-t pt-6">
           <h3 className="text-xl font-semibold mb-4 text-primary">Analysis Results:</h3>

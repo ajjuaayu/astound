@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition, useActionState } from 'react';
+import React, { useEffect, useRef, useState, useTransition, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,6 +10,7 @@ import { handleAddGuestbookWish, fetchGuestbookWishes, type Wish } from '@/app/a
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Loader2, MessageSquarePlus, UserCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const initialFormState = {
   success: undefined,
@@ -35,6 +36,11 @@ export default function Guestbook() {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [isPending, startTransition] = useTransition();
   const prevTimestamp = useRef<number | undefined>(undefined);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const loadWishes = () => {
     startTransition(async () => {
@@ -55,7 +61,7 @@ export default function Guestbook() {
           description: 'Thank you for your birthday message.',
         });
         formRef.current?.reset();
-        loadWishes(); // Refresh wishes list
+        loadWishes(); 
       } else if (formState.error) {
         toast({
           title: 'Error',
@@ -78,31 +84,44 @@ export default function Guestbook() {
           </CardTitle>
           <CardDescription>Leave your birthday wishes for Aayushi!</CardDescription>
         </CardHeader>
-        <form action={formAction} ref={formRef}>
-          <CardContent className="space-y-4">
-            <div>
-              <Input name="name" placeholder="Your Name" className="focus:ring-accent" aria-label="Your Name"/>
-              {formState.fieldErrors?.name && (
-                <p className="text-sm text-destructive mt-1">{formState.fieldErrors.name.join(', ')}</p>
-              )}
-            </div>
-            <div>
-              <Textarea name="message" placeholder="Your birthday message..." rows={4} className="focus:ring-accent" aria-label="Your birthday message"/>
-              {formState.fieldErrors?.message && (
-                <p className="text-sm text-destructive mt-1">{formState.fieldErrors.message.join(', ')}</p>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <SubmitButton />
-          </CardFooter>
-        </form>
+        {hasMounted ? (
+          <form action={formAction} ref={formRef}>
+            <CardContent className="space-y-4">
+              <div>
+                <Input name="name" placeholder="Your Name" className="focus:ring-accent" aria-label="Your Name"/>
+                {formState.fieldErrors?.name && (
+                  <p className="text-sm text-destructive mt-1">{formState.fieldErrors.name.join(', ')}</p>
+                )}
+              </div>
+              <div>
+                <Textarea name="message" placeholder="Your birthday message..." rows={4} className="focus:ring-accent" aria-label="Your birthday message"/>
+                {formState.fieldErrors?.message && (
+                  <p className="text-sm text-destructive mt-1">{formState.fieldErrors.message.join(', ')}</p>
+                )}
+              </div>
+            </CardContent>
+            <CardFooter>
+              <SubmitButton />
+            </CardFooter>
+          </form>
+        ) : (
+          <>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-36" />
+            </CardFooter>
+          </>
+        )}
       </Card>
 
       <div className="space-y-6">
         <h3 className="text-xl font-semibold text-primary">Warm Wishes:</h3>
         {isPending && wishes.length === 0 && <p className="text-muted-foreground">Loading wishes...</p>}
-        {!isPending && wishes.length === 0 && <p className="text-muted-foreground">Be the first to leave a wish!</p>}
+        {!isPending && !hasMounted && wishes.length === 0 && <p className="text-muted-foreground">Loading wishes...</p> }
+        {!isPending && hasMounted && wishes.length === 0 && <p className="text-muted-foreground">Be the first to leave a wish!</p>}
         
         {wishes.map((wish) => (
           <Card key={wish.id} className="shadow-md bg-card/80">
@@ -113,7 +132,7 @@ export default function Guestbook() {
                   <p className="font-semibold text-card-foreground">{wish.name}</p>
                   <p className="text-sm text-muted-foreground whitespace-pre-wrap">{wish.message}</p>
                   <p className="text-xs text-muted-foreground/70 mt-1">
-                    {format(new Date(wish.timestamp), "MMMM d, yyyy 'at' h:mm a")}
+                    {hasMounted ? format(new Date(wish.timestamp), "MMMM d, yyyy 'at' h:mm a") : new Date(wish.timestamp).toLocaleDateString()}
                   </p>
                 </div>
               </div>
