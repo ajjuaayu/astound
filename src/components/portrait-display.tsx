@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -9,12 +10,12 @@ export default function PortraitDisplay() {
       <CardContent className="p-0">
         <div className="relative aspect-[3/4] w-full">
           <Image
-            src="https://placehold.co/600x800.png"
+            src="/aayushi-portrait.png" // Updated image path
             alt="Aayushi's Portrait"
             layout="fill"
             objectFit="cover"
             className="rounded-lg"
-            data-ai-hint="portrait woman"
+            data-ai-hint="portrait woman" // Kept the hint, can be adjusted if needed
             priority
           />
         </div>
