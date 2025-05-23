@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useRef, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,7 +26,7 @@ function SubmitButton() {
 }
 
 export default function WishAnalyzer() {
-  const [state, formAction] = useFormState(handleAnalyzeWishes, initialState);
+  const [state, formAction] = useActionState(handleAnalyzeWishes, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const prevTimestamp = useRef<number | undefined>(undefined);

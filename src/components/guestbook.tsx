@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useRef, useState, useTransition, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ function SubmitButton() {
 }
 
 export default function Guestbook() {
-  const [formState, formAction] = useFormState(handleAddGuestbookWish, initialFormState);
+  const [formState, formAction] = useActionState(handleAddGuestbookWish, initialFormState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   const [wishes, setWishes] = useState<Wish[]>([]);
